@@ -87,6 +87,7 @@ export const Notification = () => {
           <button type="button" onClick={subscribeToPush}>
             通知を送信
           </button>
+          <p>{JSON.stringify({ subscription })}</p>
         </>
       ) : (
         <>
