@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
-import { fetchAlert } from "@/app/(pages)/(top)/pc/_container/AlertHeaderArea/actions/actions";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSpNavigation } from "../store";
 
@@ -35,7 +34,7 @@ interface ExtendedNotificationOptions extends NotificationOptions {
 interface ExtendedServiceWorkerRegistration extends ServiceWorkerRegistration {
   showNotification: (
     title: string,
-    options?: ExtendedNotificationOptions,
+    options?: ExtendedNotificationOptions
   ) => Promise<void>;
 }
 
@@ -43,27 +42,21 @@ export const Navigation = () => {
   const { isAlert, setIsAlert } = useSpNavigation();
   const router = useRouter();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <accessTokenはrefreshのAPIを叩くたびにセットされ無限ループになるので依存関係から外す>
   const fetchData = useCallback(async () => {
     try {
-      const { alerts } = await fetchAlert(
-        facilityId,
-        accessToken,
-        setAccessToken,
-      );
-      setIsAlert(alerts.length > 0);
+      setIsAlert(false);
     } catch {
       // 共通パーツのエラーなのでリダイレクト
       router.push("/login");
     }
-  }, [facilityId, accessToken, setAccessToken, setIsAlert, router]);
+  }, [setIsAlert, router]);
 
   // webプッシュ通知
   useEffect(() => {
     const handle = (e: ServiceWorkerMessageEvent) => {
       if (e.data.type === "PUSH_RECEIVE") {
         // TODO:バックランドでの検証まだ
-        setIsAlert(e.data.payload.alert);
+        setIsAlert(true);
       }
     };
     navigator.serviceWorker.addEventListener("message", handle);
@@ -74,7 +67,6 @@ export const Navigation = () => {
   }, [setIsAlert]);
 
   // 再通知の停止
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <accessTokenはrefreshのAPIを叩くたびにセットされ無限ループになるので依存関係から外す>
   useEffect(() => {
     const handle = async (e: ServiceWorkerStopEvent) => {
       if (e.data.type === "PUSH_STOP_RECEIVE") {
@@ -94,7 +86,7 @@ export const Navigation = () => {
             (
               registration as ExtendedServiceWorkerRegistration
             ).showNotification("再度「対応完了」を押してください", {
-              body: ${roomNum}号室について、通信に失敗しました。\n恐れ入りますが再度「対応完了」を押してください。,
+              body: `${roomNum}号室について、通信に失敗しました。\n恐れ入りますが再度「対応完了」を押してください。`,
               icon: "/vercel.svg",
               actions: [
                 { action: "open", title: "画面を見る" },
@@ -116,7 +108,7 @@ export const Navigation = () => {
     return () => {
       navigator.serviceWorker.removeEventListener("message", handle);
     };
-  }, [facilityId, setIsAlert]);
+  }, [setIsAlert]);
 
   // ポーリング処理
   useEffect(() => {
@@ -127,5 +119,9 @@ export const Navigation = () => {
     return () => clearInterval(intervalId);
   }, [fetchData, isAlert]);
 
-  return isAlert ? <p>アラートがあります</p> : <p>アラートはありません</p>;
+  return isAlert ? (
+    <p className="text-red-600">アラートがあります</p>
+  ) : (
+    <p>アラートはありません</p>
+  );
 };

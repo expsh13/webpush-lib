@@ -9,7 +9,7 @@ self.addEventListener("push", (event) => {
         { action: "open", title: "画面を見る" },
         { action: "completed", title: "対応完了" },
       ],
-      badge: "/badge.png",
+      badge: "/vercel.svg",
       vibrate: [200, 100, 200, 100, 200], // バイブパターン（Android用）
       data: {
         dateOfArrival: Date.now(),

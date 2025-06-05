@@ -50,7 +50,7 @@ export const Notification = () => {
     setSubscription(_subscription);
 
     // サーバーへ送信
-    await fetch("/api/mock/push", {
+    await fetch("/api/push", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ subscription: _subscription }),
