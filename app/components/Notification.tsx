@@ -1,3 +1,9 @@
+// curlコマンド
+// curl -X POST \
+//   -H "Content-Type: application/json" \
+//   -d '{"subscription":{"endpoint":"https://web.push.apple.com/QGAaO88ardNHXeqKityspO-3MnokMA8b71jKiQomyr0Cy08dvMPCIBS55jofc0YjutSe1IvMCX4xoZxgsvAab9qQpa9H-cJ1ouyfuSoRVAJ8a_03bJDUSUDAUDKQH32BIVe-r3ZdEdQq-8fwhft_Wi3v6PXGFwklafYZnnNb2dE","keys":{"p256dh":"BDVwFPxIJhHNtg49vQ6kFCmPtZFoycpTGS0_5dvGwMh2ylTg0iuMnT3nxSSIrP4jn4mGQ51MSqGScAHXF2WchMA","auth":"HnYeRV_P1q3pRvMWvGdb7A"}}}' \
+//   https://0e10-126-77-148-32.ngrok-free.app/api/push
+
 "use client";
 
 import { useState, useEffect } from "react";
